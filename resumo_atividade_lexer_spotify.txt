@@ -1,0 +1,309 @@
+RESUMO DA AULA — ANALISADOR LÉXICO COM LARK
+
+DISCIPLINA: Compiladores — Ciência da Computação, 8º semestre
+TEMA: Construindo um Analisador Léxico com Lark
+
+FOCO: EXERCÍCIO 7 — OPÇÃO 5: COMANDOS DE PLAYLIST (SPOTIFY)
+
+1. OBJETIVO
+A aula ensina a construir um analisador léxico usando Python, Lark, Regex, Jupyter Notebook e ipywidgets.
+O lexer transforma texto em tokens. Ele identifica e classifica partes do texto, mas não valida a sintaxe completa.
+
+Exemplo:
+PLAYLIST "Treino"
+ADICIONAR "Nome da faixa"
+DURACAO 03:45 GENERO rock
+ORDENAR popularidade
+
+2. CONCEITOS
+TOKEN = categoria lógica, como PLAYLIST, DURACAO ou GENERO.
+LEXEMA = texto real encontrado, como "Treino".
+PADRÃO = regra/Regex que determina o que pertence ao token.
+
+3. REGRAS IMPORTANTES
+MAXIMAL MUNCH:
+O lexer tenta reconhecer o maior pedaço possível.
+
+PRIORIDADE:
+Quando dois tokens podem reconhecer o mesmo trecho, a prioridade determina qual vence.
+Exemplo da aula: R$ 25,90 pode começar como um identificador R, enquanto PRECO reconhece o valor inteiro. Por isso PRECO pode receber prioridade maior, como PRECO.2.
+
+ERRO LÉXICO:
+Quando nenhum token reconhece o caractere atual, o Lark gera UnexpectedCharacters.
+O erro possui line, column e char.
+
+4. REGEX IMPORTANTES
+\d = um dígito
+\d+ = um ou mais dígitos
+\d{2} = exatamente dois dígitos
+\d{1,3} = de 1 a 3 dígitos
+[A-Z] = uma letra maiúscula
+[A-Z0-9]* = zero ou mais letras maiúsculas ou números
+"[^"\n]*" = texto entre aspas
+\b = fronteira de palavra
+/i = case-insensitive
+
+Exemplo:
+ /pix\b/i
+reconhece pix, PIX, Pix etc.
+
+5. LARK
+from lark import Lark
+from lark.exceptions import UnexpectedCharacters
+
+lexer = Lark(
+    gramatica,
+    parser="lalr",
+    lexer="basic"
+)
+
+tokens = list(lexer.lex(texto))
+
+Cada token possui:
+t.type
+t.value
+t.line
+t.column
+t.start_pos
+t.end_pos
+
+6. IGNORAR ESPAÇOS E COMENTÁRIOS
+Espaços, tabs e quebras:
+%ignore /[ \t\r\n]+/
+
+Comentários:
+COMENTARIO: /#[^\n]*/
+%ignore COMENTARIO
+
+7. EXEMPLOS DA AULA
+CENÁRIO A — DELIVERY:
+PEDIDO 2x "X-Burger" R$ 25,90 CUPOM FRETE10
+Tokens incluem PEDIDO, ENTREGA, CUPOM, QTD, ITEM, PRECO e CODIGO.
+
+CENÁRIO B — PIX:
+Exemplos: maria@gmail.com, 123.456.789-09, +5511987654321 e UUID.
+Tokens incluem CHAVE_EMAIL, CHAVE_CPF, CHAVE_TELEFONE e CHAVE_ALEATORIA.
+Também existem PIX, ENVIADO, RECEBIDO, PARA, DE, EM, VALOR, DATA e HORA.
+
+8. CONFLITO DE PRIORIDADE DO PIX
+Para:
+pix@loja.com.br
+
+/pix\b/i pode reconhecer "pix" como PIX, mas o texto inteiro é um e-mail.
+Por isso CHAVE_EMAIL recebe prioridade maior:
+CHAVE_EMAIL.4
+Palavras reservadas: prioridade 3.
+Literais/outras chaves: prioridade 2.
+
+Esse é um exemplo de ambiguidade léxica e deve ser explicado.
+
+9. EXERCÍCIO 7 — SPOTIFY
+A opção escolhida é:
+5. Comandos de playlist (Spotify)
+
+Exemplo do PDF:
+PLAYLIST "Treino"
+ADICIONAR "Nome da faixa"
+DURACAO 03:45 GENERO rock
+ORDENAR popularidade
+# Tema Exemplo de entrada
+
+10. REQUISITOS OBRIGATÓRIOS
+1) Tabela documentada de tokens com:
+- token
+- descrição
+- Regex
+- exemplo
+- prioridade
+
+2) No mínimo 12 tipos de tokens.
+
+3) No mínimo 4 palavras reservadas case-insensitive.
+Devem usar /i e \b.
+Exemplo:
+PLAYLIST.3: /playlist\b/i
+
+4) Pelo menos 3 literais definidos por Regex.
+
+5) Pelo menos 1 conflito de prioridade identificado, resolvido e explicado.
+Explicar:
+- qual era o conflito
+- quais tokens competiam
+- qual recebeu prioridade
+- por que funciona
+
+6) Ignorar comentários iniciados por #, espaços, tabs e quebras de linha.
+
+7) Erros léxicos com UnexpectedCharacters mostrando:
+- linha
+- coluna
+- caractere
+Além disso, pelo menos 2 dicas amigáveis específicas do domínio.
+
+8) Interface com ipywidgets (ou outra tecnologia permitida), contendo:
+- área de entrada
+- botão para analisar
+- texto colorido
+- tabela de tokens
+
+9) Pelo menos 3 entradas válidas e 2 inválidas.
+
+10) Diário de ambiguidade: parágrafo explicando um conflito e sua resolução.
+
+11. BÔNUS
+O PDF permite até +1,0 ponto com pós-processamento.
+Para Spotify, uma boa opção é uma aba "Resumo da Playlist" mostrando:
+- quantidade de músicas
+- duração total
+- gêneros
+- quantidade por gênero
+- comandos encontrados
+- critério de ordenação
+
+12. POSSÍVEIS TOKENS SPOTIFY
+Palavras reservadas possíveis:
+PLAYLIST
+ADICIONAR
+REMOVER
+DURACAO
+GENERO
+ORDENAR
+ARTISTA
+ALBUM
+REPETIR
+PAUSAR
+TOCAR
+ALEATORIO
+
+Outros tokens/literais possíveis:
+TEXTO
+DURACAO_VALOR
+ANO
+ID
+NUMERO
+
+A estrutura pode ser adaptada desde que os requisitos do exercício sejam cumpridos.
+
+13. ENTRADA VÁLIDA
+PLAYLIST "Treino"
+ADICIONAR "Believer"
+ARTISTA "Imagine Dragons"
+DURACAO 03:24
+GENERO rock
+
+ADICIONAR "Blinding Lights"
+ARTISTA "The Weeknd"
+DURACAO 03:20
+GENERO pop
+
+ORDENAR popularidade
+
+14. ERROS
+Exemplo:
+PLAYLIST "Treino
+
+Dica:
+Nomes de playlists e músicas devem estar entre aspas.
+
+Outro:
+DURACAO 3:4
+
+Se a Regex exigir MM:SS:
+Dica: use o formato MM:SS, por exemplo 03:45.
+
+15. O QUE NÃO FAZER
+O lexer não precisa validar a sintaxe completa.
+Por exemplo:
+PLAYLIST "Treino"
+ADICIONAR "Musica"
+
+O lexer identifica:
+PLAYLIST
+TEXTO
+ADICIONAR
+TEXTO
+
+A verificação da ordem correta pertence a uma etapa posterior.
+
+16. O QUE O ALUNO DEVE CONSEGUIR EXPLICAR
+É necessário explicar cada Regex e cada prioridade usada.
+Exemplo:
+/\d{2}:\d{2}/
+\d = dígito
+{2} = exatamente duas ocorrências
+: = dois-pontos literal
+
+A atividade informa que, mesmo usando IA, o aluno deve ser capaz de explicar cada Regex e prioridade.
+
+17. ORDEM RECOMENDADA
+1. Definir tokens
+2. Criar tabela de tokens
+3. Criar gramática inicial
+4. Adicionar palavras reservadas
+5. Adicionar literais
+6. Adicionar comentários
+7. Resolver conflito de prioridade
+8. Criar tratamento de erros
+9. Criar testes válidos
+10. Criar testes inválidos
+11. Criar interface
+12. Criar tabela de tokens
+13. Criar texto colorido
+14. Criar diário de ambiguidade
+15. Criar bônus
+16. Revisar tudo
+
+18. GIT
+Commits podem ser feitos conforme as etapas reais forem concluídas.
+
+Exemplos:
+docs: define tokens da linguagem Spotify
+feat: cria gramática inicial do lexer Spotify
+feat: adiciona palavras reservadas da playlist
+feat: adiciona tokens específicos de música
+feat: adiciona token de duração
+fix: resolve conflito de prioridade do lexer
+feat: adiciona tratamento de comentários
+feat: adiciona tratamento de erros léxicos
+test: adiciona casos válidos do lexer
+test: adiciona casos inválidos do lexer
+feat: cria interface do analisador léxico
+feat: adiciona tabela de tokens
+docs: adiciona diário de ambiguidade
+feat: adiciona resumo da playlist
+
+Usar datas reais dos commits.
+
+19. CHECKLIST FINAL
+[ ] Spotify é o domínio escolhido
+[ ] 12 ou mais tipos de tokens
+[ ] Tabela documentada
+[ ] Regex documentadas
+[ ] Exemplos dos tokens
+[ ] Prioridades documentadas
+[ ] 4 ou mais palavras reservadas
+[ ] Palavras reservadas usam /i
+[ ] Palavras reservadas usam \b
+[ ] 3 ou mais literais com Regex
+[ ] Existe conflito de prioridade
+[ ] Conflito explicado
+[ ] Comentários # ignorados
+[ ] Espaços ignorados
+[ ] Tabs ignorados
+[ ] Quebras de linha ignoradas
+[ ] UnexpectedCharacters utilizado
+[ ] Erro mostra linha
+[ ] Erro mostra coluna
+[ ] Erro mostra caractere
+[ ] Pelo menos 2 dicas amigáveis
+[ ] Interface com ipywidgets
+[ ] Campo de entrada
+[ ] Botão de análise
+[ ] Texto colorido
+[ ] Tabela de tokens
+[ ] 3 testes válidos
+[ ] 2 testes inválidos
+[ ] Diário de ambiguidade
+[ ] Bônus de pós-processamento
+[ ] Código organizado
+[ ] Regex e prioridades podem ser explicadas

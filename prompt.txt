@@ -1,0 +1,546 @@
+Você é meu assistente de programação para uma atividade da faculdade.
+
+Vou fornecer um PDF com o material completo da aula.
+
+==================================================
+1. LEITURA OBRIGATÓRIA DO PDF
+==================================================
+
+ANTES DE ESCREVER QUALQUER CÓDIGO:
+
+1. Leia o PDF INTEIRO, todas as 32 páginas.
+2. Não analise somente o Exercício 7.
+3. Estude também os exemplos A1, A2, B1 e B2, porque o desafio deve
+   seguir as técnicas ensinadas durante a aula.
+4. Identifique a estrutura de código utilizada pelo professor.
+5. Analise como ele trabalha com:
+   - tokens
+   - lexemas
+   - regex
+   - prioridades
+   - /i
+   - \b
+   - %ignore
+   - UnexpectedCharacters
+   - linha e coluna
+   - interface com ipywidgets
+   - tabela de tokens
+   - texto colorido
+   - casos de teste
+   - conflitos de prioridade
+6. Só depois comece a implementação.
+
+Não substitua a metodologia ensinada no PDF por uma solução completamente
+diferente.
+
+==================================================
+2. ATIVIDADE
+==================================================
+
+Faça o:
+
+EXERCÍCIO 7 — DESAFIO PARA ENTREGA
+"Meu Analisador Léxico de Mercado"
+
+Escolha especificamente a OPÇÃO 5:
+
+5 — Comandos de playlist (Spotify)
+
+O exemplo fornecido pelo professor é:
+
+PLAYLIST "Treino"
+ADICIONAR "Nome da faixa"
+DURACAO 03:45 GENERO rock
+ORDENAR popularidade
+# Tema Exemplo de entrada
+
+A solução deve ser uma mini-linguagem relacionada a comandos de playlist
+e música.
+
+==================================================
+3. REQUISITOS OBRIGATÓRIOS
+==================================================
+
+Implemente TODOS os requisitos do Exercício 7.
+
+1. Tabela de tokens documentada contendo:
+
+   - TOKEN
+   - descrição
+   - regex
+   - exemplo
+   - prioridade
+
+2. Mínimo de 12 tipos diferentes de token.
+
+3. Mínimo de 4 palavras reservadas.
+
+   Todas devem:
+
+   - ser case-insensitive
+   - utilizar /i
+   - utilizar \b
+   - utilizar prioridade adequada
+
+   Exemplo:
+
+   PLAYLIST.3: /playlist\b/i
+
+4. Mínimo de 3 literais definidos por expressão regular.
+
+   Eles devem fazer sentido para o domínio Spotify/playlist.
+
+5. Pelo menos 1 conflito de prioridade REAL.
+
+   Identifique um conflito semelhante aos apresentados nos exemplos do PDF.
+
+   Explique:
+
+   - quais tokens entram em conflito
+   - qual token é mais específico
+   - por que o conflito acontece
+   - qual prioridade foi escolhida
+   - por que a solução funciona
+
+   Coloque essa explicação também em comentário no código.
+
+6. Ignorar:
+
+   - espaços
+   - tabulações
+   - quebras de linha
+   - comentários iniciados por #
+
+7. Tratamento de erros léxicos.
+
+   Utilize:
+
+   UnexpectedCharacters
+
+   O erro deve apresentar:
+
+   - linha
+   - coluna
+   - caractere problemático
+   - dica amigável
+
+   Crie pelo menos 2 dicas específicas para o domínio Spotify.
+
+8. Interface utilizando ipywidgets.
+
+   Deve possuir:
+
+   - área de entrada
+   - botão para analisar/tokenizar
+   - texto colorido
+   - tabela de tokens
+
+9. Casos de teste:
+
+   - mínimo de 3 casos válidos
+   - mínimo de 2 casos inválidos
+
+10. Diário de Ambiguidade.
+
+   Crie um parágrafo explicando um conflito encontrado durante o
+   desenvolvimento e como ele foi resolvido.
+
+==================================================
+4. TECNOLOGIAS
+==================================================
+
+Utilize:
+
+- Python
+- Lark
+- ipywidgets
+- Jupyter/Google Colab
+
+Utilize o padrão:
+
+lexer_desafio = Lark(
+    gramatica_desafio,
+    parser="lalr",
+    lexer="basic"
+)
+
+E:
+
+def tokenizar_desafio(texto):
+    ...
+
+Utilize UnexpectedCharacters para erros léxicos.
+
+Quando apropriado, reutilize/adapte as funções apresentadas no PDF:
+
+- texto_colorido_html
+- tabela_tokens_html
+- erro_lexico_html
+- interface_lexer
+
+Não utilize bibliotecas desnecessárias.
+
+Não transforme o trabalho em um parser completo.
+
+O objetivo principal é análise LÉXICA.
+
+==================================================
+5. LINGUAGEM SPOTIFY
+==================================================
+
+Crie uma mini-linguagem coerente para comandos de playlist.
+
+Ela pode suportar comandos como:
+
+PLAYLIST "Treino"
+ADICIONAR "Blinding Lights"
+DURACAO 03:45
+GENERO pop
+ORDENAR popularidade
+REMOVER "Nome da faixa"
+REPRODUZIR "Nome da faixa"
+
+Esses são apenas exemplos.
+
+Crie uma linguagem suficientemente completa para cumprir naturalmente
+os requisitos de 12+ tokens.
+
+Considere tokens relacionados a:
+
+- comandos
+- playlists
+- músicas
+- artistas
+- gêneros
+- duração
+- números
+- posições
+- identificadores
+- critérios de ordenação
+- modos de reprodução
+- outros elementos que façam sentido para o domínio
+
+Não crie tokens artificialmente apenas para atingir 12 tipos.
+
+==================================================
+6. PRIORIDADES E AMBIGUIDADE
+==================================================
+
+Preste atenção especial às prioridades.
+
+Encontre uma situação em que um token genérico possa reconhecer o começo
+de um token mais específico.
+
+Resolva utilizando a prioridade do Lark.
+
+A explicação deve ser semelhante à lógica apresentada no PDF nos exemplos
+de conflito entre identificadores e tokens específicos.
+
+Não invente um conflito falso apenas para cumprir o requisito.
+
+==================================================
+7. INTERFACE
+==================================================
+
+A interface deve seguir o estilo do material.
+
+Ela deve permitir:
+
+1. Escolher exemplos através de um Dropdown.
+2. Editar o texto de entrada.
+3. Clicar em "Analisar".
+4. Mostrar os tokens encontrados.
+5. Mostrar o texto com os tokens coloridos.
+6. Mostrar linha e coluna na tabela.
+7. Mostrar erro amigável quando houver erro léxico.
+
+==================================================
+8. TESTES
+==================================================
+
+Crie pelo menos:
+
+3 exemplos válidos, por exemplo:
+
+- playlist completa
+- playlist com vários comandos
+- playlist com diferentes gêneros/ordenações
+
+E pelo menos:
+
+2 exemplos inválidos.
+
+Os erros devem ser propositalmente relacionados ao domínio.
+
+Depois execute todos os testes e confirme que os resultados estão
+corretos.
+
+==================================================
+9. BÔNUS
+==================================================
+
+Se todos os requisitos obrigatórios estiverem funcionando, implemente
+também o bônus.
+
+Uma possibilidade:
+
+Aba "Resumo da Playlist"
+
+Mostrando:
+
+- quantidade de músicas
+- duração total
+- gêneros encontrados
+- comandos encontrados
+- critérios de ordenação
+
+O bônus NÃO pode prejudicar os requisitos obrigatórios.
+
+==================================================
+10. DESENVOLVIMENTO INCREMENTAL
+==================================================
+
+Não faça todo o projeto em uma única alteração gigante.
+
+Desenvolva em etapas.
+
+Depois de cada etapa significativa:
+
+1. Faça as alterações.
+2. Execute/teste o código.
+3. Verifique se está funcionando.
+4. Faça um commit.
+5. Mostre o commit criado.
+6. Continue para a próxima etapa.
+
+Utilize Conventional Commits.
+
+Exemplos:
+
+docs: define tokens da linguagem Spotify
+feat: cria gramática inicial do lexer Spotify
+feat: adiciona palavras reservadas da playlist
+feat: adiciona tokens específicos de música
+feat: adiciona token de duração
+fix: resolve conflito de prioridade do lexer
+feat: adiciona tratamento de comentários
+feat: adiciona tratamento de erros léxicos
+test: adiciona casos válidos do lexer
+test: adiciona casos inválidos do lexer
+feat: cria interface do analisador léxico
+feat: adiciona destaque visual dos tokens
+feat: adiciona tabela de tokens
+docs: adiciona diário de ambiguidade
+refactor: organiza código do analisador léxico
+
+Use:
+
+feat:
+fix:
+test:
+docs:
+refactor:
+style:
+chore:
+
+conforme o tipo real da alteração.
+
+NÃO faça um commit gigante contendo o projeto inteiro.
+
+NÃO faça commits artificiais apenas para aumentar a quantidade de
+commits.
+
+==================================================
+11. DATAS E HORÁRIOS DOS COMMITS
+==================================================
+
+O desenvolvimento começou em 18/09/2026.
+
+Registre nos commits a data e o horário REAL em que cada commit for
+criado.
+
+Não altere artificialmente:
+
+GIT_AUTHOR_DATE
+GIT_COMMITTER_DATE
+
+Não crie timestamps retroativos ou futuros.
+
+O Git deve registrar automaticamente o horário real da criação de cada
+commit.
+
+Depois de cada commit, mostre:
+
+Commit: <hash>
+Mensagem: <mensagem>
+Data: <data e horário do Git>
+
+Exemplo:
+
+Commit: a31f82c
+Mensagem: feat: adiciona tokens de comandos de playlist
+Data: 21/09/2026 21:42
+
+==================================================
+12. ORDEM SUGERIDA DE DESENVOLVIMENTO
+==================================================
+
+Siga aproximadamente esta sequência:
+
+ETAPA 1
+Analisar o PDF e planejar a linguagem Spotify.
+
+ETAPA 2
+Criar tabela de tokens e estrutura inicial da gramática.
+
+Commit:
+docs: define tokens da linguagem Spotify
+
+ETAPA 3
+Criar palavras reservadas.
+
+Commit:
+feat: adiciona palavras reservadas da playlist
+
+ETAPA 4
+Criar tokens específicos do domínio.
+
+Commit:
+feat: adiciona tokens específicos de música
+
+ETAPA 5
+Criar duração, identificadores e demais regex.
+
+Commit:
+feat: adiciona tokens de dados musicais
+
+ETAPA 6
+Testar e resolver o conflito de prioridade.
+
+Commit:
+fix: resolve conflito de prioridade do lexer
+
+ETAPA 7
+Implementar comentários e espaços ignorados.
+
+Commit:
+feat: adiciona tratamento de comentários
+
+ETAPA 8
+Implementar erros léxicos e dicas.
+
+Commit:
+feat: adiciona tratamento de erros léxicos
+
+ETAPA 9
+Criar casos de teste.
+
+Commit:
+test: adiciona casos de teste do lexer
+
+ETAPA 10
+Criar interface.
+
+Commit:
+feat: cria interface do analisador léxico
+
+ETAPA 11
+Adicionar texto colorido e tabela.
+
+Commit:
+feat: adiciona visualização dos tokens
+
+ETAPA 12
+Implementar bônus, caso tudo esteja funcionando.
+
+Commit:
+feat: adiciona resumo da playlist
+
+ETAPA 13
+Documentar o diário de ambiguidade.
+
+Commit:
+docs: documenta conflito de prioridade
+
+ETAPA 14
+Revisar e organizar o código.
+
+Commit:
+refactor: organiza código do analisador
+
+==================================================
+13. NÃO AVANCE COM ERROS
+==================================================
+
+Depois de cada etapa, execute os testes necessários.
+
+Se alguma coisa quebrar:
+
+1. Identifique a causa.
+2. Corrija.
+3. Teste novamente.
+4. Faça um commit do tipo fix.
+
+Exemplo:
+
+fix: corrige reconhecimento do token de duração
+
+Não esconda erros.
+
+==================================================
+14. REVISÃO FINAL
+==================================================
+
+Quando terminar, faça uma revisão completa comparando a implementação
+com o PDF.
+
+Crie uma checklist:
+
+[OK] PDF analisado
+[OK] Tabela de tokens
+[OK] 12+ tipos de token
+[OK] 4+ palavras reservadas
+[OK] /i utilizado
+[OK] \b utilizado
+[OK] 3+ regex específicas
+[OK] conflito de prioridade real
+[OK] prioridade documentada
+[OK] comentários ignorados
+[OK] espaços ignorados
+[OK] UnexpectedCharacters
+[OK] linha e coluna
+[OK] 2+ dicas amigáveis
+[OK] interface ipywidgets
+[OK] texto colorido
+[OK] tabela de tokens
+[OK] 3+ testes válidos
+[OK] 2+ testes inválidos
+[OK] diário de ambiguidade
+[OK] código funcional
+
+Se algum item não estiver funcionando, corrija antes de finalizar.
+
+==================================================
+15. EXPLICAÇÃO FINAL
+==================================================
+
+Ao terminar, explique de maneira simples:
+
+1. O que é cada token criado.
+2. O que cada regex faz.
+3. Por que cada prioridade foi escolhida.
+4. Qual foi o conflito encontrado.
+5. Como o conflito foi resolvido.
+6. Como os erros léxicos são tratados.
+7. Como a interface funciona.
+8. Como cada requisito do professor foi atendido.
+
+A explicação deve ser suficiente para que eu consiga entender e explicar
+o projeto caso o professor faça perguntas sobre ele.
+
+IMPORTANTE:
+Não invente requisitos que não estão no PDF.
+Não ignore requisitos do PDF.
+Não deixe TODOs.
+Não entregue código incompleto.
+Não substitua a análise léxica por análise sintática.
