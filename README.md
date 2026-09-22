@@ -97,13 +97,19 @@ testes ok
 
 ## Capturas de tela
 
-Adicione aqui suas imagens depois de tirar os prints da execução:
+Abaixo estão alguns exemplos de execução do projeto em ambiente de desenvolvimento:
 
-![Print 1](coloque-aqui-o-nome-da-imagem-1.png)
+### 1. Entrada válida da playlist
+![Entrada válida da playlist](imgs/image.png)
 
-![Print 2](coloque-aqui-o-nome-da-imagem-2.png)
+### 2. Tokens reconhecidos pela linguagem
+![Tokens reconhecidos](imgs/image2.png)
 
-![Print 3](coloque-aqui-o-nome-da-imagem-3.png)
+### 3. Interface interativa com dropdown e análise
+![Interface interativa](imgs/image3.png)
+
+### 4. Caso com erro léxico e mensagem amigável
+![Erro léxico](imgs/image4.png)
 
 ## Observações
 
